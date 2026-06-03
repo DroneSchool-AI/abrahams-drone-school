@@ -27,13 +27,13 @@
   .header-title h1 { font-size: 16px; font-weight: 900; color: var(--accent); font-family: 'Space Mono', monospace; }
   .header-title p { font-size: 11px; color: var(--muted); margin-top: 1px; }
   .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-  .save-bar { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
+  .level-badge { background: var(--panel2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; }
+  .save-bar { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 10; }
   .save-bar input { flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 10px; padding: 7px 12px; color: var(--text); font-family: 'Nunito', sans-serif; font-size: 13px; outline: none; }
   .save-bar input:focus { border-color: var(--green); }
   .save-bar input::placeholder { color: var(--muted); }
   .save-project-btn { background: var(--green); border: none; border-radius: 10px; padding: 7px 14px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
   .save-project-btn:hover { opacity: 0.85; }
-  .level-badge { background: var(--panel2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; }
   .tabs { display: flex; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 10; }
   .tab { flex: 1; padding: 8px; text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -89,7 +89,7 @@
 </head>
 <body>
 <div class="stars"></div>
-<div class="bday-banner" id="bdayBanner">🎂 Happy 11th Birthday Abraham! Today you are officially a drone engineer! 🚁🎉</div>
+<div class="bday-banner" id="bdayBanner">Happy 11th Birthday Abraham! Today you are officially a drone engineer! 🚁</div>
 <header>
   <div class="drone-icon">🚁</div>
   <div class="header-title">
@@ -97,29 +97,29 @@
     <p>Python · Raspberry Pi · Robotics · Drones</p>
   </div>
   <div class="header-right">
-    <div class="level-badge" id="levelBadge">LVL 1 — CADET</div>
+    <div class="level-badge" id="levelBadge">LVL 1 - CADET</div>
   </div>
 </header>
+<div class="save-bar">
+  <input type="text" id="projectName" placeholder="Name this project to save it..." maxlength="50" />
+  <button class="save-project-btn" onclick="saveProject()">Save Project</button>
+</div>
 <div class="tabs">
-  <div class="tab active" id="tabChat" onclick="switchTab('chat')">💬 Chat</div>
-  <div class="tab" id="tabGallery" onclick="switchTab('gallery')">🚀 My Projects</div>
+  <div class="tab active" id="tabChat" onclick="switchTab('chat')">Chat</div>
+  <div class="tab" id="tabGallery" onclick="switchTab('gallery')">My Projects</div>
 </div>
 <div class="view active" id="viewChat">
   <div class="chat-wrap" id="chatWrap"></div>
   <div class="quick-prompts" id="quickPrompts">
-    <button class="qp" onclick="sendQuick('I want to build something cool, help me come up with an idea!')">💡 Give me an idea</button>
-    <button class="qp" onclick="sendQuick('I want to make my drone do something awesome')">🚁 Drone ideas</button>
-    <button class="qp" onclick="sendQuick('I want to make a game in Python')">🎮 Make a game</button>
-    <button class="qp" onclick="sendQuick('What can I build with a Raspberry Pi?')">🥧 Raspberry Pi</button>
-    <button class="qp" onclick="newSession()">✨ New session</button>
-  </div>
-  <div class="save-bar">
-    <input type="text" id="projectName" placeholder="Name this project to save it..." maxlength="50" />
-    <button class="save-project-btn" onclick="saveProject()">💾 Save</button>
+    <button class="qp" onclick="sendQuick('I want to build something cool, help me come up with an idea!')">Give me an idea</button>
+    <button class="qp" onclick="sendQuick('I want to make my drone do something awesome')">Drone ideas</button>
+    <button class="qp" onclick="sendQuick('I want to make a game in Python')">Make a game</button>
+    <button class="qp" onclick="sendQuick('What can I build with a Raspberry Pi?')">Raspberry Pi</button>
+    <button class="qp" onclick="newSession()">New session</button>
   </div>
   <div class="input-area">
     <textarea id="userInput" placeholder="What do you want to build today?" rows="1"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="sendMessage()">🚀</button>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Go</button>
   </div>
 </div>
 <div class="view" id="viewGallery">
@@ -127,7 +127,7 @@
 </div>
 <script>
 const WORKER_URL = 'https://abrahams-drone-school.jazzpropertiesmn.workers.dev';
-const SYSTEM_PROMPT = 'You are a creative coding collaborator for Abraham, who is 11 years old. Your job is NOT to teach him syntax or make him memorize code — it is to help him develop ideas and bring them to life using AI as his tool. Your approach: Start by asking what he wants to BUILD or what problem he wants to SOLVE, not what he wants to learn. When he has an idea, get excited about it and help him develop it further with questions like what should it do, what would make it cooler, what happens when. Write the code FOR him, then explain what it does in simple terms so he understands the concept. Teach him how to describe ideas clearly to AI — this is the most important skill. Encourage him to tweak, break, and experiment. When he gets stuck, ask what do you want it to do differently. Celebrate every idea, no matter how wild. Topics: Python, Raspberry Pi, drones, robotics, games, animations, anything he wants to build. If he asks about something unrelated to building or coding or robotics, kindly redirect him. Never give homework-style exercises unless he asks — always lead with building something fun. His superpower is his imagination. Your job is to make it real.';
+const SYSTEM_PROMPT = 'You are a creative coding collaborator for Abraham, who is 11 years old. Your job is NOT to teach him syntax or make him memorize code. It is to help him develop ideas and bring them to life using AI as his tool. Start by asking what he wants to BUILD or what problem he wants to SOLVE. When he has an idea, get excited and help him develop it further. Write the code FOR him, then explain what it does in simple terms. Teach him how to describe ideas clearly to AI. Encourage him to tweak, break, and experiment. Celebrate every idea no matter how wild. Topics: Python, Raspberry Pi, drones, robotics, games, animations, anything he wants to build. If he asks about something unrelated to building or coding or robotics, kindly redirect him. Never give homework-style exercises unless he asks. Always lead with building something fun. His superpower is his imagination. Your job is to make it real.';
 const STORAGE_KEY = 'abraham_chat_history';
 const PROJECTS_KEY = 'abraham_projects';
 const SESSIONS_KEY = 'abraham_session_count';
@@ -142,11 +142,11 @@ function getSessionCount() { try { return parseInt(localStorage.getItem(SESSIONS
 function incrementSession() { try { localStorage.setItem(SESSIONS_KEY, getSessionCount() + 1); } catch(e) {} }
 function updateLevel() {
   const count = loadProjects().length;
-  let level = 'LVL 1 — CADET';
-  if (count >= 2) level = 'LVL 2 — BUILDER';
-  if (count >= 5) level = 'LVL 3 — ENGINEER';
-  if (count >= 10) level = 'LVL 4 — INVENTOR';
-  if (count >= 20) level = 'LVL 5 — DRONE MASTER';
+  let level = 'LVL 1 - CADET';
+  if (count >= 2) level = 'LVL 2 - BUILDER';
+  if (count >= 5) level = 'LVL 3 - ENGINEER';
+  if (count >= 10) level = 'LVL 4 - INVENTOR';
+  if (count >= 20) level = 'LVL 5 - DRONE MASTER';
   document.getElementById('levelBadge').textContent = level;
 }
 function formatText(text) {
@@ -162,7 +162,7 @@ function renderMessage(role, text, skipSave) {
   div.className = 'msg' + (role === 'user' ? ' user' : '');
   const avatar = document.createElement('div');
   avatar.className = 'avatar ' + (role === 'user' ? 'user-av' : 'ai');
-  avatar.textContent = role === 'user' ? 'A' : '🤖';
+  avatar.textContent = role === 'user' ? 'A' : 'AI';
   const bubble = document.createElement('div');
   bubble.className = 'bubble ' + (role === 'user' ? 'user' : 'ai');
   bubble.innerHTML = formatText(text);
@@ -174,7 +174,7 @@ function renderMessage(role, text, skipSave) {
 function showTyping() {
   const wrap = document.getElementById('chatWrap');
   const div = document.createElement('div'); div.className = 'msg'; div.id = 'typingIndicator';
-  const avatar = document.createElement('div'); avatar.className = 'avatar ai'; avatar.textContent = '🤖';
+  const avatar = document.createElement('div'); avatar.className = 'avatar ai'; avatar.textContent = 'AI';
   const bubble = document.createElement('div'); bubble.className = 'bubble ai';
   bubble.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
   div.appendChild(avatar); div.appendChild(bubble); wrap.appendChild(div); wrap.scrollTop = wrap.scrollHeight;
@@ -194,7 +194,7 @@ async function sendMessage() {
     const data = await response.json();
     const reply = data.content && data.content[0] ? data.content[0].text : 'Hmm, something went wrong. Try again!';
     removeTyping(); history.push({ role: 'assistant', content: reply }); renderMessage('assistant', reply);
-  } catch(e) { removeTyping(); renderMessage('assistant', 'Oops! Something went wrong. Try again! 😅'); }
+  } catch(e) { removeTyping(); renderMessage('assistant', 'Oops! Something went wrong. Try again!'); }
   isTyping = false; document.getElementById('sendBtn').disabled = false;
 }
 function sendQuick(text) { document.getElementById('userInput').value = text; sendMessage(); }
@@ -204,7 +204,7 @@ function newSession() {
   document.getElementById('quickPrompts').style.display = 'flex';
   document.getElementById('projectName').value = '';
   saveHistory();
-  const welcome = 'Fresh start! What do you want to build today? 🚀 Tell me your wildest idea and we will make it happen!';
+  const welcome = 'Fresh start! What do you want to build today? Tell me your wildest idea and we will make it happen!';
   history.push({ role: 'assistant', content: welcome }); renderMessage('assistant', welcome); incrementSession();
 }
 function saveProject() {
@@ -216,7 +216,7 @@ function saveProject() {
   const preview = history.filter(m => m.role === 'assistant').slice(-1)[0];
   const project = { id: Date.now(), name: name, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), preview: preview ? preview.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : '', history: history.slice(-30) };
   projects.unshift(project); saveProjects(projects); updateLevel();
-  nameInput.value = ''; nameInput.placeholder = 'Project saved! 🎉';
+  nameInput.value = ''; nameInput.placeholder = 'Project saved!';
   setTimeout(() => { nameInput.placeholder = 'Name this project to save it...'; }, 2500);
   renderGallery();
 }
@@ -239,7 +239,7 @@ function renderGallery() {
   wrap.innerHTML = '<div class="gallery-header"><h2>My Projects</h2><span class="project-count">' + projects.length + ' project' + (projects.length !== 1 ? 's' : '') + '</span></div>';
   projects.forEach(p => {
     const card = document.createElement('div'); card.className = 'project-card';
-    card.innerHTML = '<div class="project-card-header"><div><div class="project-name">🛸 ' + p.name + '</div><div class="project-date">' + p.date + '</div></div></div><div class="project-preview">' + p.preview + '</div><div class="project-actions"><button class="load-btn" onclick="loadProject(' + p.id + ')">▶ Load</button><button class="delete-btn" onclick="deleteProject(' + p.id + ')">✕ Delete</button></div>';
+    card.innerHTML = '<div class="project-card-header"><div><div class="project-name">' + p.name + '</div><div class="project-date">' + p.date + '</div></div></div><div class="project-preview">' + p.preview + '</div><div class="project-actions"><button class="load-btn" onclick="loadProject(' + p.id + ')">Load</button><button class="delete-btn" onclick="deleteProject(' + p.id + ')">Delete</button></div>';
     wrap.appendChild(card);
   });
 }
@@ -259,10 +259,10 @@ window.addEventListener('load', function() {
   if (saved.length > 0) {
     history = saved; history.forEach(m => renderMessage(m.role, m.content, true));
     document.getElementById('quickPrompts').style.display = 'none';
-    const r = document.createElement('div'); r.style.cssText = 'text-align:center;padding:8px;font-size:12px;color:var(--muted);'; r.textContent = '— continuing from last time —';
+    const r = document.createElement('div'); r.style.cssText = 'text-align:center;padding:8px;font-size:12px;color:var(--muted);'; r.textContent = '-- continuing from last time --';
     document.getElementById('chatWrap').insertBefore(r, document.getElementById('chatWrap').firstChild);
   } else {
-    const welcome = isBirthday() ? 'HAPPY BIRTHDAY ABRAHAM! 🎂🚁 You are 11 today! What an awesome way to celebrate — what is your wildest idea? Let us build it!' : 'Hey Abraham! 👋 Welcome to YOUR Coding School! 🚁🤖\n\nI am not here to give you boring lessons — I am here to help you BUILD things. Whatever you can imagine, we can make it real with code.\n\nSo... what do you want to create today? 🚀';
+    const welcome = isBirthday() ? 'HAPPY BIRTHDAY ABRAHAM! You are 11 today! What an awesome way to celebrate. What is your wildest idea? Let us build it!' : 'Hey Abraham! Welcome to YOUR Coding School! I am not here to give you boring lessons. I am here to help you BUILD things. Whatever you can imagine, we can make it real with code. So... what do you want to create today?';
     history.push({ role: 'assistant', content: welcome }); renderMessage('assistant', welcome); incrementSession();
   }
 });
