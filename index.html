@@ -8,102 +8,147 @@
 <style>
   :root {
     --sky: #0a0e2e;
-    --sky2: #111840;
     --panel: #161d45;
     --panel2: #1e2657;
     --accent: #00d4ff;
     --accent2: #7c3aed;
-    --green: #22c55e;
-    --amber: #f59e0b;
     --text: #e8eaf6;
     --muted: #8892b0;
     --border: rgba(0,212,255,0.15);
+    --green: #22c55e;
+    --amber: #f59e0b;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Nunito', sans-serif; background: var(--sky); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  body { font-family: 'Nunito', sans-serif; background: var(--sky); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
   .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%), radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 75% 12%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1px 1px at 88% 88%, rgba(255,255,255,0.4) 0%, transparent 100%); }
-  header { position: relative; z-index: 10; display: flex; align-items: center; gap: 14px; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--border); }
-  .drone-icon { font-size: 28px; animation: hoverfloat 3s ease-in-out infinite; }
+  header { position: relative; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .drone-icon { font-size: 24px; animation: hoverfloat 3s ease-in-out infinite; }
   @keyframes hoverfloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-  .header-title h1 { font-size: 18px; font-weight: 900; color: var(--accent); font-family: 'Space Mono', monospace; }
-  .header-title p { font-size: 12px; color: var(--muted); margin-top: 1px; }
-  .level-badge { background: var(--panel2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--accent); font-family: 'Space Mono', monospace; margin-left: auto; }
-  .chat-wrap { flex: 1; overflow-y: auto; padding: 20px; position: relative; z-index: 5; scroll-behavior: smooth; }
+  .header-title h1 { font-size: 16px; font-weight: 900; color: var(--accent); font-family: 'Space Mono', monospace; }
+  .header-title p { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .level-badge { background: var(--panel2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; }
+  .tabs { display: flex; background: var(--panel); border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 10; }
+  .tab { flex: 1; padding: 8px; text-align: center; font-size: 12px; color: var(--muted); cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .view { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+  .view.active { display: flex; }
+  .chat-wrap { flex: 1; overflow-y: auto; padding: 16px; scroll-behavior: smooth; }
   .chat-wrap::-webkit-scrollbar { width: 4px; }
   .chat-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-  .msg { display: flex; gap: 10px; margin-bottom: 16px; animation: fadeUp 0.3s ease; }
+  .msg { display: flex; gap: 10px; margin-bottom: 14px; animation: fadeUp 0.3s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .msg.user { flex-direction: row-reverse; }
-  .avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
   .avatar.ai { background: linear-gradient(135deg, var(--accent2), var(--accent)); }
-  .avatar.user-av { background: var(--panel2); border: 1px solid var(--border); font-size: 13px; font-weight: 700; color: var(--accent); }
-  .bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.65; }
+  .avatar.user-av { background: var(--panel2); border: 1px solid var(--border); font-size: 12px; font-weight: 700; color: var(--accent); }
+  .bubble { max-width: 78%; padding: 9px 13px; border-radius: 16px; font-size: 14px; line-height: 1.65; }
   .bubble.ai { background: var(--panel2); border: 1px solid var(--border); border-top-left-radius: 4px; }
   .bubble.user { background: var(--accent2); border-top-right-radius: 4px; color: #fff; }
   .bubble code { font-family: 'Space Mono', monospace; background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 4px; font-size: 12px; color: var(--accent); }
-  .bubble pre { background: #0d1117; border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; padding: 12px; margin: 8px 0; overflow-x: auto; font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.6; color: #a8ff78; }
+  .bubble pre { background: #0d1117; border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; padding: 12px; margin: 8px 0; overflow-x: auto; font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.6; color: #a8ff78; white-space: pre-wrap; }
   .typing { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
   .typing span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 1.2s infinite; }
   .typing span:nth-child(2) { animation-delay: 0.2s; }
   .typing span:nth-child(3) { animation-delay: 0.4s; }
   @keyframes blink { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
-  .quick-prompts { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 12px; position: relative; z-index: 5; }
-  .qp { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--muted); cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif; }
-  .qp:hover { background: var(--panel2); color: var(--accent); border-color: var(--accent); }
-  .input-area { position: relative; z-index: 10; padding: 12px 20px 16px; background: var(--panel); border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-end; }
-  textarea { flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; color: var(--text); font-family: 'Nunito', sans-serif; font-size: 14px; resize: none; outline: none; max-height: 120px; min-height: 44px; line-height: 1.5; transition: border-color 0.2s; }
+  .quick-prompts { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 10px; flex-shrink: 0; }
+  .qp { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+  .qp:hover { color: var(--accent); border-color: var(--accent); }
+  .save-bar { display: flex; gap: 8px; align-items: center; padding: 8px 16px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
+  .save-bar input { flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 10px; padding: 7px 12px; color: var(--text); font-family: 'Nunito', sans-serif; font-size: 13px; outline: none; }
+  .save-bar input:focus { border-color: var(--green); }
+  .save-bar input::placeholder { color: var(--muted); }
+  .save-project-btn { background: var(--green); border: none; border-radius: 10px; padding: 7px 14px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+  .save-project-btn:hover { opacity: 0.85; }
+  .input-area { display: flex; gap: 8px; align-items: flex-end; padding: 10px 16px 14px; background: var(--panel); border-top: 1px solid var(--border); flex-shrink: 0; }
+  textarea { flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 9px 13px; color: var(--text); font-family: 'Nunito', sans-serif; font-size: 14px; resize: none; outline: none; max-height: 100px; min-height: 40px; line-height: 1.5; transition: border-color 0.2s; }
   textarea:focus { border-color: var(--accent); }
   textarea::placeholder { color: var(--muted); }
-  .send-btn { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent2), var(--accent)); border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: transform 0.15s, opacity 0.15s; flex-shrink: 0; }
+  .send-btn { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent2), var(--accent)); border: none; border-radius: 10px; cursor: pointer; font-size: 16px; transition: transform 0.15s; flex-shrink: 0; }
   .send-btn:hover { transform: scale(1.05); }
-  .send-btn:active { transform: scale(0.97); }
   .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-  .bday-banner { display: none; background: linear-gradient(135deg, #7c3aed, #f59e0b); text-align: center; padding: 10px; font-size: 14px; font-weight: 700; color: #fff; position: relative; z-index: 10; }
+  .gallery-wrap { flex: 1; overflow-y: auto; padding: 16px; }
+  .gallery-empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
+  .gallery-empty .big { font-size: 40px; margin-bottom: 12px; }
+  .project-card { background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; animation: fadeUp 0.3s ease; }
+  .project-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+  .project-name { font-size: 15px; font-weight: 700; color: var(--accent); }
+  .project-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .project-preview { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; border-left: 2px solid var(--border); padding-left: 10px; }
+  .project-actions { display: flex; gap: 8px; }
+  .load-btn { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 12px; color: var(--accent); cursor: pointer; transition: all 0.2s; }
+  .load-btn:hover { border-color: var(--accent); }
+  .delete-btn { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 12px; color: #e24b4a; cursor: pointer; transition: all 0.2s; }
+  .delete-btn:hover { border-color: #e24b4a; }
+  .gallery-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .gallery-header h2 { font-size: 16px; font-weight: 700; color: var(--text); }
+  .project-count { font-size: 12px; color: var(--muted); }
+  .bday-banner { display: none; background: linear-gradient(135deg, #7c3aed, #f59e0b); text-align: center; padding: 8px; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
 </style>
 </head>
 <body>
 <div class="stars"></div>
-<div class="bday-banner" id="bdayBanner">🎂 Happy 11th Birthday, Abraham! Today you are officially a drone engineer! 🚁🎉</div>
+<div class="bday-banner" id="bdayBanner">🎂 Happy 11th Birthday Abraham! Today you are officially a drone engineer! 🚁🎉</div>
 <header>
   <div class="drone-icon">🚁</div>
   <div class="header-title">
     <h1>ABRAHAM'S DRONE SCHOOL</h1>
     <p>Python · Raspberry Pi · Robotics · Drones</p>
   </div>
-  <div class="level-badge">LVL 1 — CADET</div>
+  <div class="header-right">
+    <div class="level-badge" id="levelBadge">LVL 1 — CADET</div>
+  </div>
 </header>
-<div class="chat-wrap" id="chatWrap"></div>
-<div class="quick-prompts" id="quickPrompts">
-  <button class="qp" onclick="sendQuick('Teach me my first Python lesson')">🐍 Start Python lesson</button>
-  <button class="qp" onclick="sendQuick('What cool things can I build with a Raspberry Pi?')">🥧 Raspberry Pi ideas</button>
-  <button class="qp" onclick="sendQuick('How does a drone fly and how do I program one?')">🚁 Drone programming</button>
-  <button class="qp" onclick="sendQuick('Can you help me build a simple robot?')">🤖 Build a robot</button>
-  <button class="qp" onclick="sendQuick('I want to make a simple game in Python')">🎮 Make a game</button>
+<div class="tabs">
+  <div class="tab active" id="tabChat" onclick="switchTab('chat')">💬 Chat</div>
+  <div class="tab" id="tabGallery" onclick="switchTab('gallery')">🚀 My Projects</div>
 </div>
-<div class="input-area">
-  <textarea id="userInput" placeholder="Ask me anything about Python, drones, or Raspberry Pi..." rows="1"></textarea>
-  <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">🚀</button>
+<div class="view active" id="viewChat">
+  <div class="chat-wrap" id="chatWrap"></div>
+  <div class="quick-prompts" id="quickPrompts">
+    <button class="qp" onclick="sendQuick('I want to build something cool, help me come up with an idea!')">💡 Give me an idea</button>
+    <button class="qp" onclick="sendQuick('I want to make my drone do something awesome')">🚁 Drone ideas</button>
+    <button class="qp" onclick="sendQuick('I want to make a game in Python')">🎮 Make a game</button>
+    <button class="qp" onclick="sendQuick('What can I build with a Raspberry Pi?')">🥧 Raspberry Pi</button>
+    <button class="qp" onclick="newSession()">✨ New session</button>
+  </div>
+  <div class="save-bar">
+    <input type="text" id="projectName" placeholder="Name this project to save it..." maxlength="50" />
+    <button class="save-project-btn" onclick="saveProject()">💾 Save</button>
+  </div>
+  <div class="input-area">
+    <textarea id="userInput" placeholder="What do you want to build today?" rows="1"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">🚀</button>
+  </div>
+</div>
+<div class="view" id="viewGallery">
+  <div class="gallery-wrap" id="galleryWrap"></div>
 </div>
 <script>
 const WORKER_URL = 'https://abrahams-drone-school.jazzpropertiesmn.workers.dev';
-const SYSTEM_PROMPT = 'You are a creative coding collaborator for Abraham, who is 11 years old. Your job is NOT to teach him syntax or make him memorize code — it is to help him develop ideas and bring them to life using AI as his tool.
-
-Your approach:
-- Start by asking what he wants to BUILD or what problem he wants to SOLVE, not what he wants to learn
-- When he has an idea, get excited about it and help him develop it further with questions like "what should it do?", "what would make it cooler?", "what happens when...?"
-- Write the code FOR him, then explain what it does in simple terms so he understands the concept
-- Teach him how to describe ideas clearly to AI — this is the most important skill
-- Encourage him to tweak, break, and experiment — "what if we changed this part?"
-- When he gets stuck, ask "what do you want it to do differently?" not "do you know what a variable is?"
-- Celebrate every idea, no matter how wild — "a drone that follows my dog" is a perfect project
-- Topics: Python, Raspberry Pi, drones, robotics, games, animations, anything he wants to build
-- If he asks about something unrelated to building/coding/robotics, kindly redirect him
-- Never give homework-style exercises unless he asks — always lead with building something fun
-- His superpower is his imagination. Your job is to make it real.
-Then commit to main. That's the only change needed!';
+const SYSTEM_PROMPT = 'You are a creative coding collaborator for Abraham, who is 11 years old. Your job is NOT to teach him syntax or make him memorize code — it is to help him develop ideas and bring them to life using AI as his tool. Your approach: Start by asking what he wants to BUILD or what problem he wants to SOLVE, not what he wants to learn. When he has an idea, get excited about it and help him develop it further with questions like what should it do, what would make it cooler, what happens when. Write the code FOR him, then explain what it does in simple terms so he understands the concept. Teach him how to describe ideas clearly to AI — this is the most important skill. Encourage him to tweak, break, and experiment. When he gets stuck, ask what do you want it to do differently. Celebrate every idea, no matter how wild. Topics: Python, Raspberry Pi, drones, robotics, games, animations, anything he wants to build. If he asks about something unrelated to building or coding or robotics, kindly redirect him. Never give homework-style exercises unless he asks — always lead with building something fun. His superpower is his imagination. Your job is to make it real.';
+const STORAGE_KEY = 'abraham_chat_history';
+const PROJECTS_KEY = 'abraham_projects';
+const SESSIONS_KEY = 'abraham_session_count';
 let history = [];
 let isTyping = false;
-function isBirthday() { const now = new Date(); return now.getMonth() === 5 && now.getDate() === 19; }
+function isBirthday() { const n = new Date(); return n.getMonth() === 5 && n.getDate() === 19; }
+function loadHistory() { try { const s = localStorage.getItem(STORAGE_KEY); return s ? JSON.parse(s) : []; } catch(e) { return []; } }
+function saveHistory() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-40))); } catch(e) {} }
+function loadProjects() { try { const s = localStorage.getItem(PROJECTS_KEY); return s ? JSON.parse(s) : []; } catch(e) { return []; } }
+function saveProjects(p) { try { localStorage.setItem(PROJECTS_KEY, JSON.stringify(p)); } catch(e) {} }
+function getSessionCount() { try { return parseInt(localStorage.getItem(SESSIONS_KEY) || '0'); } catch(e) { return 0; } }
+function incrementSession() { try { localStorage.setItem(SESSIONS_KEY, getSessionCount() + 1); } catch(e) {} }
+function updateLevel() {
+  const count = loadProjects().length;
+  let level = 'LVL 1 — CADET';
+  if (count >= 2) level = 'LVL 2 — BUILDER';
+  if (count >= 5) level = 'LVL 3 — ENGINEER';
+  if (count >= 10) level = 'LVL 4 — INVENTOR';
+  if (count >= 20) level = 'LVL 5 — DRONE MASTER';
+  document.getElementById('levelBadge').textContent = level;
+}
 function formatText(text) {
   text = text.replace(/```[\w]*\n?([\s\S]*?)```/g, function(_, code) { const safe = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return '<pre>' + safe + '</pre>'; });
   text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -111,7 +156,7 @@ function formatText(text) {
   text = text.replace(/\n/g, '<br>');
   return text;
 }
-function renderMessage(role, text) {
+function renderMessage(role, text, skipSave) {
   const wrap = document.getElementById('chatWrap');
   const div = document.createElement('div');
   div.className = 'msg' + (role === 'user' ? ' user' : '');
@@ -124,18 +169,15 @@ function renderMessage(role, text) {
   div.appendChild(avatar); div.appendChild(bubble);
   wrap.appendChild(div);
   wrap.scrollTop = wrap.scrollHeight;
+  if (!skipSave) saveHistory();
 }
 function showTyping() {
   const wrap = document.getElementById('chatWrap');
-  const div = document.createElement('div');
-  div.className = 'msg'; div.id = 'typingIndicator';
-  const avatar = document.createElement('div');
-  avatar.className = 'avatar ai'; avatar.textContent = '🤖';
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble ai';
+  const div = document.createElement('div'); div.className = 'msg'; div.id = 'typingIndicator';
+  const avatar = document.createElement('div'); avatar.className = 'avatar ai'; avatar.textContent = '🤖';
+  const bubble = document.createElement('div'); bubble.className = 'bubble ai';
   bubble.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
-  div.appendChild(avatar); div.appendChild(bubble);
-  wrap.appendChild(div); wrap.scrollTop = wrap.scrollHeight;
+  div.appendChild(avatar); div.appendChild(bubble); wrap.appendChild(div); wrap.scrollTop = wrap.scrollHeight;
 }
 function removeTyping() { const el = document.getElementById('typingIndicator'); if (el) el.remove(); }
 async function sendMessage() {
@@ -146,35 +188,83 @@ async function sendMessage() {
   document.getElementById('quickPrompts').style.display = 'none';
   history.push({ role: 'user', content: text });
   renderMessage('user', text);
-  isTyping = true;
-  document.getElementById('sendBtn').disabled = true;
-  showTyping();
+  isTyping = true; document.getElementById('sendBtn').disabled = true; showTyping();
   try {
-    const response = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1000, system: SYSTEM_PROMPT, messages: history.slice(-10) })
-    });
+    const response = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1000, system: SYSTEM_PROMPT, messages: history.slice(-20) }) });
     const data = await response.json();
     const reply = data.content && data.content[0] ? data.content[0].text : 'Hmm, something went wrong. Try again!';
-    removeTyping();
-    history.push({ role: 'assistant', content: reply });
-    renderMessage('assistant', reply);
-  } catch (e) {
-    removeTyping();
-    renderMessage('assistant', 'Oops! Error: ' + e.message);
-  }
-  isTyping = false;
-  document.getElementById('sendBtn').disabled = false;
+    removeTyping(); history.push({ role: 'assistant', content: reply }); renderMessage('assistant', reply);
+  } catch(e) { removeTyping(); renderMessage('assistant', 'Oops! Something went wrong. Try again! 😅'); }
+  isTyping = false; document.getElementById('sendBtn').disabled = false;
 }
 function sendQuick(text) { document.getElementById('userInput').value = text; sendMessage(); }
-document.getElementById('userInput').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 120) + 'px'; });
+function newSession() {
+  if (history.length > 2 && !confirm('Start fresh? Save your project first if you want to keep it!')) return;
+  history = []; document.getElementById('chatWrap').innerHTML = '';
+  document.getElementById('quickPrompts').style.display = 'flex';
+  document.getElementById('projectName').value = '';
+  saveHistory();
+  const welcome = 'Fresh start! What do you want to build today? 🚀 Tell me your wildest idea and we will make it happen!';
+  history.push({ role: 'assistant', content: welcome }); renderMessage('assistant', welcome); incrementSession();
+}
+function saveProject() {
+  const nameInput = document.getElementById('projectName');
+  const name = nameInput.value.trim();
+  if (!name) { nameInput.focus(); nameInput.placeholder = 'Give your project a name first!'; return; }
+  if (history.length < 2) { alert('Chat a bit first, then save!'); return; }
+  const projects = loadProjects();
+  const preview = history.filter(m => m.role === 'assistant').slice(-1)[0];
+  const project = { id: Date.now(), name: name, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }), preview: preview ? preview.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : '', history: history.slice(-30) };
+  projects.unshift(project); saveProjects(projects); updateLevel();
+  nameInput.value = ''; nameInput.placeholder = 'Project saved! 🎉';
+  setTimeout(() => { nameInput.placeholder = 'Name this project to save it...'; }, 2500);
+  renderGallery();
+}
+function loadProject(id) {
+  const project = loadProjects().find(p => p.id === id);
+  if (!project) return;
+  history = project.history; document.getElementById('chatWrap').innerHTML = '';
+  history.forEach(m => renderMessage(m.role, m.content, true));
+  document.getElementById('quickPrompts').style.display = 'none';
+  switchTab('chat'); document.getElementById('projectName').value = project.name;
+}
+function deleteProject(id) {
+  if (!confirm('Delete this project?')) return;
+  saveProjects(loadProjects().filter(p => p.id !== id)); updateLevel(); renderGallery();
+}
+function renderGallery() {
+  const wrap = document.getElementById('galleryWrap');
+  const projects = loadProjects();
+  if (projects.length === 0) { wrap.innerHTML = '<div class="gallery-empty"><div class="big">🚀</div><p>No projects saved yet!</p><p style="margin-top:8px;font-size:12px;">Build something in the chat, then hit Save to add it here.</p></div>'; return; }
+  wrap.innerHTML = '<div class="gallery-header"><h2>My Projects</h2><span class="project-count">' + projects.length + ' project' + (projects.length !== 1 ? 's' : '') + '</span></div>';
+  projects.forEach(p => {
+    const card = document.createElement('div'); card.className = 'project-card';
+    card.innerHTML = '<div class="project-card-header"><div><div class="project-name">🛸 ' + p.name + '</div><div class="project-date">' + p.date + '</div></div></div><div class="project-preview">' + p.preview + '</div><div class="project-actions"><button class="load-btn" onclick="loadProject(' + p.id + ')">▶ Load</button><button class="delete-btn" onclick="deleteProject(' + p.id + ')">✕ Delete</button></div>';
+    wrap.appendChild(card);
+  });
+}
+function switchTab(tab) {
+  document.getElementById('tabChat').className = 'tab' + (tab === 'chat' ? ' active' : '');
+  document.getElementById('tabGallery').className = 'tab' + (tab === 'gallery' ? ' active' : '');
+  document.getElementById('viewChat').className = 'view' + (tab === 'chat' ? ' active' : '');
+  document.getElementById('viewGallery').className = 'view' + (tab === 'gallery' ? ' active' : '');
+  if (tab === 'gallery') renderGallery();
+}
+document.getElementById('userInput').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
 document.getElementById('userInput').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
 if (isBirthday()) document.getElementById('bdayBanner').style.display = 'block';
+updateLevel();
 window.addEventListener('load', function() {
-  const welcome = isBirthday() ? 'Happy Birthday Abraham! You are 11 today! 🎂🚁 Ready to become a drone engineer? Pick a button or ask me anything!' : 'Hey Abraham! 👋 Welcome to YOUR Coding School! 🚁🤖\n\nI am your personal teacher for Python, Raspberry Pi, robotics, and drones. Pick a button below or just type your first question!';
-  renderMessage('assistant', welcome);
-  history.push({ role: 'assistant', content: welcome });
+  const saved = loadHistory();
+  if (saved.length > 0) {
+    history = saved; history.forEach(m => renderMessage(m.role, m.content, true));
+    document.getElementById('quickPrompts').style.display = 'none';
+    const r = document.createElement('div'); r.style.cssText = 'text-align:center;padding:8px;font-size:12px;color:var(--muted);'; r.textContent = '— continuing from last time —';
+    document.getElementById('chatWrap').insertBefore(r, document.getElementById('chatWrap').firstChild);
+  } else {
+    const welcome = isBirthday() ? 'HAPPY BIRTHDAY ABRAHAM! 🎂🚁 You are 11 today! What an awesome way to celebrate — what is your wildest idea? Let us build it!' : 'Hey Abraham! 👋 Welcome to YOUR Coding School! 🚁🤖\n\nI am not here to give you boring lessons — I am here to help you BUILD things. Whatever you can imagine, we can make it real with code.\n\nSo... what do you want to create today? 🚀';
+    history.push({ role: 'assistant', content: welcome }); renderMessage('assistant', welcome); incrementSession();
+  }
 });
 </script>
 </body>
