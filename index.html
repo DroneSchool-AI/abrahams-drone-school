@@ -139,7 +139,7 @@ async function sendMessage() {
     const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM_PROMPT, messages: history.slice(-10) })
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1000, system: SYSTEM_PROMPT, messages: history.slice(-10) })
     });
     const data = await response.json();
     const reply = data.content && data.content[0] ? data.content[0].text : 'Hmm, something went wrong. Try again!';
