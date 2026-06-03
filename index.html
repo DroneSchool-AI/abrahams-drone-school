@@ -20,38 +20,11 @@
     --border: rgba(0,212,255,0.15);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--sky);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-  .stars {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background:
-      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 75% 12%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 88% 88%, rgba(255,255,255,0.4) 0%, transparent 100%);
-  }
-  header {
-    position: relative; z-index: 10;
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 20px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-  }
-  .drone-icon { font-size: 28px; animation: hover 3s ease-in-out infinite; }
-  @keyframes hover {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-  }
+  body { font-family: 'Nunito', sans-serif; background: var(--sky); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%), radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%), radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.3) 0%, transparent 100%), radial-gradient(1px 1px at 75% 12%, rgba(255,255,255,0.5) 0%, transparent 100%), radial-gradient(1px 1px at 88% 88%, rgba(255,255,255,0.4) 0%, transparent 100%); }
+  header { position: relative; z-index: 10; display: flex; align-items: center; gap: 14px; padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--border); }
+  .drone-icon { font-size: 28px; animation: hoverfloat 3s ease-in-out infinite; }
+  @keyframes hoverfloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
   .header-title h1 { font-size: 18px; font-weight: 900; color: var(--accent); font-family: 'Space Mono', monospace; }
   .header-title p { font-size: 12px; color: var(--muted); margin-top: 1px; }
   .level-badge { background: var(--panel2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; font-size: 12px; color: var(--accent); font-family: 'Space Mono', monospace; margin-left: auto; }
@@ -90,7 +63,7 @@
 </head>
 <body>
 <div class="stars"></div>
-<div class="bday-banner" id="bdayBanner">🎂 Happy 11th Birthday, Abraham! Today's lesson: you're officially a drone engineer! 🚁🎉</div>
+<div class="bday-banner" id="bdayBanner">🎂 Happy 11th Birthday, Abraham! Today you are officially a drone engineer! 🚁🎉</div>
 <header>
   <div class="drone-icon">🚁</div>
   <div class="header-title">
@@ -113,27 +86,17 @@
 </div>
 <script>
 const WORKER_URL = 'https://abrahams-drone-school.jazzpropertiesmn.workers.dev';
-const SYSTEM_PROMPT = `You are a friendly, encouraging coding and robotics teacher for Abraham, who is 11 years old. He is learning Python and working toward building and programming his own drone using a Raspberry Pi. You can discuss Python programming, Raspberry Pi projects, drones, robotics, coding projects, and STEM topics. If Abraham asks about something completely unrelated, kindly redirect him back to coding and robots. Use simple encouraging language, keep responses concise, use emojis occasionally, and end with a question or small challenge. His big dream is to program a real drone with a Raspberry Pi!`;
-
+const SYSTEM_PROMPT = 'You are a friendly, encouraging coding and robotics teacher for Abraham, who is 11 years old. He is learning Python and working toward building and programming his own drone using a Raspberry Pi. You can discuss Python programming, Raspberry Pi projects, drones, robotics, coding projects, and STEM topics. If Abraham asks about something completely unrelated, kindly redirect him back to coding and robots. Use simple encouraging language, keep responses concise, use emojis occasionally, and end with a question or small challenge. His big dream is to program a real drone with a Raspberry Pi!';
 let history = [];
 let isTyping = false;
-
-function isBirthday() {
-  const now = new Date();
-  return now.getMonth() === 5 && now.getDate() === 19;
-}
-
+function isBirthday() { const now = new Date(); return now.getMonth() === 5 && now.getDate() === 19; }
 function formatText(text) {
-  text = text.replace(/```[\w]*\n?([\s\S]*?)```/g, (_, code) => {
-    const safe = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return '<pre>' + safe + '</pre>';
-  });
+  text = text.replace(/```[\w]*\n?([\s\S]*?)```/g, function(_, code) { const safe = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return '<pre>' + safe + '</pre>'; });
   text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/\n/g, '<br>');
   return text;
 }
-
 function renderMessage(role, text) {
   const wrap = document.getElementById('chatWrap');
   const div = document.createElement('div');
@@ -144,12 +107,10 @@ function renderMessage(role, text) {
   const bubble = document.createElement('div');
   bubble.className = 'bubble ' + (role === 'user' ? 'user' : 'ai');
   bubble.innerHTML = formatText(text);
-  div.appendChild(avatar);
-  div.appendChild(bubble);
+  div.appendChild(avatar); div.appendChild(bubble);
   wrap.appendChild(div);
   wrap.scrollTop = wrap.scrollHeight;
 }
-
 function showTyping() {
   const wrap = document.getElementById('chatWrap');
   const div = document.createElement('div');
@@ -162,18 +123,12 @@ function showTyping() {
   div.appendChild(avatar); div.appendChild(bubble);
   wrap.appendChild(div); wrap.scrollTop = wrap.scrollHeight;
 }
-
-function removeTyping() {
-  const el = document.getElementById('typingIndicator');
-  if (el) el.remove();
-}
-
+function removeTyping() { const el = document.getElementById('typingIndicator'); if (el) el.remove(); }
 async function sendMessage() {
   const input = document.getElementById('userInput');
   const text = input.value.trim();
   if (!text || isTyping) return;
-  input.value = '';
-  input.style.height = 'auto';
+  input.value = ''; input.style.height = 'auto';
   document.getElementById('quickPrompts').style.display = 'none';
   history.push({ role: 'user', content: text });
   renderMessage('user', text);
@@ -184,12 +139,7 @@ async function sendMessage() {
     const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: history.slice(-10)
-      })
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM_PROMPT, messages: history.slice(-10) })
     });
     const data = await response.json();
     const reply = data.content && data.content[0] ? data.content[0].text : 'Hmm, something went wrong. Try again!';
@@ -198,31 +148,17 @@ async function sendMessage() {
     renderMessage('assistant', reply);
   } catch (e) {
     removeTyping();
-    renderMessage('assistant', 'Oops, my circuits got confused! 😅 Try again in a second. Error: ' + e.message);
+    renderMessage('assistant', 'Oops! Error: ' + e.message);
   }
   isTyping = false;
   document.getElementById('sendBtn').disabled = false;
 }
-
-function sendQuick(text) {
-  document.getElementById('userInput').value = text;
-  sendMessage();
-}
-
-document.getElementById('userInput').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-});
-document.getElementById('userInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-});
-
+function sendQuick(text) { document.getElementById('userInput').value = text; sendMessage(); }
+document.getElementById('userInput').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 120) + 'px'; });
+document.getElementById('userInput').addEventListener('keydown', function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
 if (isBirthday()) document.getElementById('bdayBanner').style.display = 'block';
-
-window.addEventListener('load', () => {
-  const welcome = isBirthday()
-    ? '🎂 HAPPY BIRTHDAY ABRAHAM! You\'re 11 today! Let\'s celebrate by building something amazing! 🚁🎉\n\nI\'m your personal coding teacher. Ready to become a drone engineer? Pick a button below or ask me anything!'
-    : 'Hey Abraham! 👋 Welcome to YOUR Coding School! 🚁🤖\n\nI\'m your personal teacher for Python, Raspberry Pi, robotics, and drones. We\'ll start simple and work up to programming your very own drone! 🚀\n\nPick a button below or just type your first question!';
+window.addEventListener('load', function() {
+  const welcome = isBirthday() ? 'Happy Birthday Abraham! You are 11 today! 🎂🚁 Ready to become a drone engineer? Pick a button or ask me anything!' : 'Hey Abraham! 👋 Welcome to YOUR Coding School! 🚁🤖\n\nI am your personal teacher for Python, Raspberry Pi, robotics, and drones. Pick a button below or just type your first question!';
   renderMessage('assistant', welcome);
   history.push({ role: 'assistant', content: welcome });
 });
